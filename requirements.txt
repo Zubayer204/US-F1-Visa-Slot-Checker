@@ -1,2 +1,4 @@
 telethon
 python-dotenv
+pytz
+emails
