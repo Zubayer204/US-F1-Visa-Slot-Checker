@@ -2,3 +2,4 @@ telethon
 python-dotenv
 pytz
 emails
+flask
