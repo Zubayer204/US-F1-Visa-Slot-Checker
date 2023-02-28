@@ -19,5 +19,7 @@ async def handle_new_message(event):
     Handler for new messages
     """
     print(event.message.text, event.message.date)
+    print(type(event.message.date))
+    print()
 
 client.run_until_disconnected()
