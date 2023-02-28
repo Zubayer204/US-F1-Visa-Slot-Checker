@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <title>Create Alert</title>
+</head>
+<body>
+
+    {% if data %}
+        {% if data['success'] %}
+        <div id="dialog" class="dialog">
+            <div class="dialog-content">
+              <p>{{ data['msg'] }}</p><br>
+              <p>To delete this alert, <a href="/delete_alert">Click here.</a></p>
+              <button id="ok" class="button">OK</button>
+            </div>
+        </div>
+        {% endif %}
+    {% endif %}
+
+    <div class="flex items-center justify-center h-screen">
+        <div class="max-w-sm rounded overflow-hidden">
+            <form action="/set_alert" method="post" class="bg-white shadow-md rounded px-8 pt-8 pb-12 mb-4">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                Email
+                </label>
+                <input name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Email" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="date">
+                Alert for slot prior to
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="notif_date" id="date" type="date" required>
+            </div>
+            <div class="flex items-center justify-between">
+                <input type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                    <a href="/">Home</a>
+                </button>
+            </div>
+            </form>
+            <p class="text-center text-gray-500 text-xs">
+            &copy;2020 Acme Corp. All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    
+</body>
+</html>

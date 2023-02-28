@@ -20,7 +20,7 @@ SMTP_PASS = getenv("SMTP_PASS")
 conn = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
 cursor = conn.cursor()
 cursor.execute(
-    '''CREATE TABLE IF NOT EXISTS alarms (id INTEGER PRIMARY KEY, name TEXT, email TEXT, notif_date DATE)''')
+    '''CREATE TABLE IF NOT EXISTS alarms (id INTEGER PRIMARY KEY, email TEXT UNIQUE, notif_date DATE)''')
 cursor.execute(
     '''CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY, slot_date DATE, updated DATETIME)''')
 
@@ -30,7 +30,7 @@ months = {m.lower() for m in month_name[1:]}
 
 def send_mail(email, slot_date):
     message = emails.html(
-    html=f"<h1>SLOT UPDATE!<h1><br> Slot is available on {slot_date.strftime('%d %B')}",
+    html=f"<h1>SLOT UPDATE!</h1><h3><br> Slot is available on {slot_date.strftime('%d %B')}</h3>",
     subject=f"Slot available on {slot_date.strftime('%d %B')}",
     mail_from=("US F1 SLOT BOT", "noreply_slot_bot@zubayer.one"))
 
@@ -42,6 +42,7 @@ def send_mail(email, slot_date):
             "password": SMTP_PASS,
             "tls": True}
     )
+    print("Sent mail to:", email)
 
 
 def save_and_notify(slot_date, updated):
@@ -54,12 +55,12 @@ def save_and_notify(slot_date, updated):
     conn.commit()
 
     cursor.execute(
-        '''SELECT * FROM alarms WHERE notif_date <= ?''', (slot_date,))
+        '''SELECT * FROM alarms WHERE notif_date >= ?''', (slot_date,))
     
     results = cursor.fetchall()
     for row in results:
         print(row)
-        send_mail(row['email'], slot_date)
+        send_mail(row[1], slot_date)
 
 
 def get_date(msg):

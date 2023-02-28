@@ -131,3 +131,4 @@ dmypy.json
 # Custom
 slot_checker.session
 slot_checker.session-journal
+database.db
