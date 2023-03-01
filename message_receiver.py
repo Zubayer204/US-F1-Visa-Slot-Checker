@@ -26,6 +26,7 @@ cursor.execute(
 
 # define constant variables
 months = {m.lower() for m in month_name[1:]}
+WORDS_TO_EXCLUDE = ['super']
 
 
 def send_mail(email, slot_date):
@@ -71,17 +72,18 @@ def get_date(msg):
     updated = msg.date.astimezone(pytz.timezone('Asia/Dhaka'))
     current_year = dt.datetime.now().year
 
-    for m in months:
-        if m in text or m[:3] in text:
-            date = re.search(r"\d{1,2}", text)
-            if date:
-                slot_datetime = dt.datetime.strptime(
-                    f"{current_year} {date.group()} {m.capitalize()}", "%Y %d %B")
-                save_and_notify(slot_datetime.date(), updated)
-                return {
-                    "slot_date": slot_datetime.date(),
-                    "updated": updated
-                }
+    if not (any(word in text for word in WORDS_TO_EXCLUDE) or text.endswith('?')):    
+        for m in months:
+            if m in text or m[:3] in text:
+                date = re.search(r"\d{1,2}", text)
+                if date:
+                    slot_datetime = dt.datetime.strptime(
+                        f"{current_year} {date.group()} {m.capitalize()}", "%Y %d %B")
+                    save_and_notify(slot_datetime.date(), updated)
+                    return {
+                        "slot_date": slot_datetime.date(),
+                        "updated": updated
+                    }
     return False
 
 
