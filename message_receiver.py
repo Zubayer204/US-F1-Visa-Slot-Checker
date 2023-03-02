@@ -25,7 +25,12 @@ cursor.execute(
     '''CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY, slot_date DATE, updated DATETIME)''')
 
 # define constant variables
-months = {m.lower() for m in month_name[1:]}
+months = {}
+for m in month_name[1:]:
+    if len(m) > 5:
+        months[m] = [m.lower(), m[:3].lower()]
+    else:
+        months[m] = [m.lower()]
 WORDS_TO_EXCLUDE = ['super']
 
 
@@ -64,6 +69,17 @@ def save_and_notify(slot_date, updated):
         send_mail(row[1], slot_date)
 
 
+def check_closeness(dates: list, month_names: list, s: str) -> int:
+    """
+    Check if the date is close to the month name
+    """
+    for date in dates:
+        date_ind = s.find(date)
+        if any(m in s[date_ind-15:date_ind+15] for m in month_names):
+            return int(date)
+    return 0
+
+
 def get_date(msg):
     """
     Get slot date from message
@@ -73,17 +89,20 @@ def get_date(msg):
     current_year = dt.datetime.now().year
 
     if not (any(word in text for word in WORDS_TO_EXCLUDE) or text.endswith('?')):    
-        for m in months:
-            if m in text or m[:3] in text:
-                date = re.search(r"\d{1,2}", text)
-                if date:
-                    slot_datetime = dt.datetime.strptime(
-                        f"{current_year} {date.group()} {m.capitalize()}", "%Y %d %B")
-                    save_and_notify(slot_datetime.date(), updated)
-                    return {
-                        "slot_date": slot_datetime.date(),
-                        "updated": updated
-                    }
+        for big_name, m in months.items():
+            if any(each in text for each in m):
+                dates = re.findall(r"\d{1,2}", text)
+                if dates:
+                    # check if the date is close to the monthname in string
+                    result_date = check_closeness(dates, m, text)
+                    if result_date:
+                        slot_datetime = dt.datetime.strptime(
+                            f"{current_year} {result_date} {big_name}", "%Y %d %B")
+                        save_and_notify(slot_datetime.date(), updated)
+                        return {
+                            "slot_date": slot_datetime.date(),
+                            "updated": updated
+                        }
     return False
 
 
