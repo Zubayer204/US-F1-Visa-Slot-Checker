@@ -75,7 +75,7 @@ def check_closeness(dates: list, month_names: list, s: str) -> int:
     """
     for date in dates:
         date_ind = s.find(date)
-        if any(m in s[date_ind-15:date_ind+15] for m in month_names):
+        if any(m in s[max(0, date_ind-15):date_ind+15] for m in month_names):
             return int(date)
     return 0
 
