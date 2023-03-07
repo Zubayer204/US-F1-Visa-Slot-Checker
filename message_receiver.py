@@ -187,7 +187,7 @@ def send_mail(email, slot_date):
 													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
 														<tr>
 															<td class="pad" style="text-align:center;width:100%;">
-																<h1 style="margin: 0; color: #555555; direction: ltr; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; font-size: 28px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><em><span class="tinyMce-placeholder">SLOT IS AVAILABLE ON {slot_date}!</span></em></h1>
+																<h1 style="margin: 0; color: #555555; direction: ltr; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; font-size: 28px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><em><span class="tinyMce-placeholder">SLOT IS AVAILABLE ON {slot_date.strftime('%d %B')}!</span></em></h1>
 															</td>
 														</tr>
 													</table>
