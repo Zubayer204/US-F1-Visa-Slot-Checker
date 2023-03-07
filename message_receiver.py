@@ -1,5 +1,6 @@
 from os import getenv
 from calendar import month_name
+from multiprocessing import Process
 import re
 import sqlite3
 import emails
@@ -31,22 +32,25 @@ for m in month_name[1:]:
         months[m] = [m.lower(), m[:3].lower()]
     else:
         months[m] = [m.lower()]
-WORDS_TO_EXCLUDE = ['super']
+WORDS_TO_EXCLUDE = ['super', 'nah', 'nai', 'not']
 
 
 def send_mail(email, slot_date):
+    """
+    Function for sending mails to the subscribers
+    """
     message = emails.html(
-    html=f"<h1>SLOT UPDATE!</h1><h3><br> Slot is available on {slot_date.strftime('%d %B')}</h3>",
-    subject=f"Slot available on {slot_date.strftime('%d %B')}",
-    mail_from=("US F1 SLOT BOT", "noreply_slot_bot@zubayer.one"))
+        html=f"<h1>SLOT UPDATE!</h1><h3><br> Slot is available on {slot_date.strftime('%d %B')}</h3>",
+        subject=f"Slot available on {slot_date.strftime('%d %B')}",
+        mail_from=("US F1 SLOT BOT", "noreply_slot_bot@zubayer.one"))
 
     message.send(
         to=email,
         smtp={"host": "email-smtp.us-east-1.amazonaws.com",
-            "port": 587,
-            "user": SMTP_USER,
-            "password": SMTP_PASS,
-            "tls": True}
+              "port": 587,
+              "user": SMTP_USER,
+              "password": SMTP_PASS,
+              "tls": True}
     )
     print("Sent mail to:", email)
 
@@ -57,25 +61,33 @@ def save_and_notify(slot_date, updated):
     """
 
     # save the date in database
-    cursor.execute('''INSERT OR REPLACE INTO data (id, slot_date, updated) VALUES (?, ?, ?)''', (1, slot_date, updated))
+    cursor.execute(
+        '''INSERT OR REPLACE INTO data (id, slot_date, updated) VALUES (?, ?, ?)''',
+        (1, slot_date, updated)
+    )
     conn.commit()
 
     cursor.execute(
         '''SELECT * FROM alarms WHERE notif_date >= ?''', (slot_date,))
-    
+
     results = cursor.fetchall()
+    proccesses = []
     for row in results:
         print(row)
-        send_mail(row[1], slot_date)
+        process = Process(target=send_mail, args=(row[1], slot_date))
+        process.start()
+        proccesses.append(process)
+    for process in proccesses:
+        process.join()
 
 
-def check_closeness(dates: list, month_names: list, s: str) -> int:
+def check_closeness(dates: list, month_names: list, text_string: str) -> int:
     """
     Check if the date is close to the month name
     """
     for date in dates:
-        date_ind = s.find(date)
-        if any(m in s[max(0, date_ind-10):date_ind+10] for m in month_names):
+        date_ind = text_string.find(date)
+        if any(m in text_string[max(0, date_ind-10):date_ind+10] for m in month_names):
             return int(date)
     return 0
 
@@ -88,7 +100,7 @@ def get_date(msg):
     updated = msg.date.astimezone(pytz.timezone('Asia/Dhaka'))
     current_year = dt.datetime.now().year
 
-    if not (any(word in text for word in WORDS_TO_EXCLUDE) or text.endswith('?')):    
+    if not (any(word in text.split(' ') for word in WORDS_TO_EXCLUDE) or text.endswith('?')):
         for big_name, m in months.items():
             if any(each in text for each in m):
                 dates = re.findall(r"\d{1,2}", text)
