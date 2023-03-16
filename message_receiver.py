@@ -32,7 +32,18 @@ for m in month_name[1:]:
         months[m] = [m.lower(), m[:3].lower()]
     else:
         months[m] = [m.lower()]
-WORDS_TO_EXCLUDE = ['super', 'nah', 'nai', 'not', 'grateful', 'thanks', 'gone']
+WORDS_TO_EXCLUDE = [
+    'super',
+    'nah',
+    'nai',
+    'not',
+    'grateful',
+    'thanks',
+    'gone',
+    'alhamdulilah',
+    'alhamdulillah',
+    'got'
+]
 
 
 def send_mail(email, slot_date):
