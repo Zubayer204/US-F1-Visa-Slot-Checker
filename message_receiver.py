@@ -278,6 +278,10 @@ def save_and_notify(slot_date, updated):
     )
     conn.commit()
 
+    # skip if the date is in next year actually
+    if slot_date < dt.datetime.now().date():
+        return
+
     cursor.execute(
         '''SELECT * FROM alarms WHERE notif_date >= ?''', (slot_date,))
 
@@ -321,9 +325,6 @@ def get_date(msg):
                     if result_date:
                         slot_datetime = dt.datetime.strptime(
                             f"{current_year} {result_date} {big_name}", "%Y %d %B")
-                        # skip if the date is in next year actually
-                        if slot_datetime < dt.datetime.now():
-                            continue
                         save_and_notify(slot_datetime.date(), updated)
                         return {
                             "slot_date": slot_datetime.date(),
