@@ -45,8 +45,7 @@ WORDS_TO_EXCLUDE = [
     'got',
     "ns",
     "no slot",
-    "er",
-    "er,"
+    "er"
 ]
 
 
