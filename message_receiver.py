@@ -255,6 +255,7 @@ def send_mail(email, slot_date):
         subject=f"Slot available on {slot_date.strftime('%d %B')}",
         mail_from=("US F1 SLOT BOT", "slotbot@zubayer.one"))
 
+    message.set_headers({'reply-to': 'zubayer.rahaman@usm.edu', 'in-reply-to': 'zubayer.rahaman@usm.edu'})
     message.send(
         to=email,
         smtp={"host": "email-smtp.us-east-1.amazonaws.com",
