@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import date, datetime
 import pytz
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 app = Flask(__name__, static_folder='static')
 
 @app.route('/')
@@ -16,6 +16,19 @@ def home():
     conn.close()
 
     return render_template('index.html', slot_date=slot_date, updated_at=updated_at)
+
+@app.route('/update')
+def get_data():
+    conn = sqlite3.connect("database.db", detect_types=sqlite3.PARSE_DECLTYPES)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM data")
+    result = cursor.fetchone()
+    slot_date = result[1].strftime("%d %B")
+    updated_at = result[2]
+    conn.close()
+
+    return jsonify({"slot_date": slot_date, "updated_at": updated_at})
+
 
 @app.route("/set_alert", methods=['GET', 'POST'])
 def set_alert():

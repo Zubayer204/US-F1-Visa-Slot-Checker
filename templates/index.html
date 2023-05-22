@@ -22,9 +22,9 @@
             <div class="px-6 py-4">
             <div class="font-bold text-xl mb-2">US F1 Slot Checker for BD</div><br>
             <p class="font-bold text-gray-900 text-base">
-                Slot available on {{ slot_date }}
+                Slot available on <span id="slot_date">{{ slot_date }}</span>
             </p><br>
-            <p class="italic text-gray-400 text-base">Last updated on {{ updated_at }}</p>
+            <p class="italic text-gray-400 text-base">Last updated on <span id="updated_at">{{ updated_at }}</span></p>
             </div>
             <div class="flex px-6 pt-4 pb-2 justify-between">
                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
@@ -39,6 +39,8 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
     
 </body>
 </html>
