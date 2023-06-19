@@ -9,24 +9,42 @@ p {
 }
 
 .dialog {
-    display: block; /* Hide by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
+  display: block; /* Hide by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.dialog-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: solid black;
+}
+
+.button {
+    cursor:pointer;
+}
+
+.main-box {
+  position: relative;
+}
   
-  .dialog-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: solid black;
-  }
-  
-  .button {
-     cursor:pointer;
-  }
+#toast-default {
+  position: absolute;
+  top: 1em;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 999;
+  display: none;
+}
+
+.custom-height {
+  height: 100vh;
+}

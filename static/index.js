@@ -15,3 +15,8 @@ const interval = setInterval(() => {
       }
     });
 }, 20000);
+
+if (!localStorage.getItem('show_notice')){
+  document.getElementById('toast-default').style.display = 'block';
+  localStorage.setItem('show_notice', true);
+}
