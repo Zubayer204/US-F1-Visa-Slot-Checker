@@ -20,5 +20,5 @@ const interval = setInterval(() => {
 
 if (!localStorage.getItem('show_data_notice')){
   document.getElementById('toast-default').style.display = 'block';
-  localStorage.setItem('show_notice', true);
+  localStorage.setItem('show_data_notice', true);
 }
