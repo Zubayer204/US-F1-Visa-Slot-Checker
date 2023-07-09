@@ -313,10 +313,14 @@ def get_date(msg):
     Get slot date from message
     """
     text = msg.text.lower()
+    words_in_text = text.split(' ')
+    # if the message is lenghty, it's probably not a slot update
+    if len(words_in_text) > 20:
+        return False
     updated = msg.date.astimezone(pytz.timezone('Asia/Dhaka'))
     current_year = dt.datetime.now().year
 
-    if not (any(word in text.split(' ') for word in WORDS_TO_EXCLUDE) or text.endswith('?')):
+    if not (any(word in words_in_text for word in WORDS_TO_EXCLUDE) or text.endswith('?')):
         for big_name, m in months.items():
             if any(each in text for each in m):
                 dates = re.findall(r"\d{1,2}", text)
